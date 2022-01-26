@@ -1,6 +1,28 @@
 {
-  "name": "nodejs",
+  "name": "hyper-ext-counter",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+  "type": "module",
+  "license": "Apache 2.0",
+  "source": "src/index.ts",
+  "exports": {
+    "require": "./dist/counter.cjs",
+    "default": "./dist/counter.modern.js"
+  },
+  "dependencies": {
+    "ramda": "^0.28.0"
+  },
+  "devDependencies": {
+    "microbundle": "^0.14.2",
+    "tsm": "^2.2.1",
+    "typescript": "^4.5.5",
+    "uvu": "^0.5.3"
+  },
+  "main": "./dist/counter.cjs",
+  "module": "./dist/counter.module.js",
+  "unpkg": "./dist/counter.umd.js",
+  "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch",
+    "test": "deno fmt src && deno lint src && uvu -r tsm src"
+  }
 }

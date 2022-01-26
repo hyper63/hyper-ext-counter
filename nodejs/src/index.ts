@@ -1,6 +1,6 @@
-import { R } from "./deps.ts";
+import * as R from "ramda";
 
-const { dec, inc, prop, mergeDeepRight, always } = R;
+const { assoc, __, dec, inc, prop, mergeDeepRight, always } = R;
 
 interface Count {
   count: number;
@@ -17,6 +17,9 @@ interface Hyper {
   };
 }
 
+const set = (hyper, key) =>
+  (count) => hyper.cache.set(key, assoc("count", count, {})).then(() => count);
+
 export const counter = (hyper: Hyper) =>
   mergeDeepRight(hyper, {
     ext: {
@@ -32,10 +35,7 @@ export const counter = (hyper: Hyper) =>
             .then(prop("count"))
             .catch(always(0))
             .then(inc)
-            .then((count) =>
-              hyper.cache.set(key, { count })
-                .then(() => count)
-            )
+            .then(set(hyper, key))
             .catch(always(0)),
         dec: (key: string) =>
           hyper.cache
@@ -43,10 +43,7 @@ export const counter = (hyper: Hyper) =>
             .then(prop("count"))
             .catch(always(0))
             .then(dec)
-            .then((count) =>
-              hyper.cache.set(key, { count })
-                .then(() => count)
-            )
+            .then(set(hyper, key))
             .catch(always(0)),
         reset: (key: string) =>
           hyper.cache

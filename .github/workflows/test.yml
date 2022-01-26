@@ -1,0 +1,32 @@
+on:
+  push:
+    branches: "**"
+    tags-ignore: "*"
+
+jobs:
+  test-deno:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deno-version: [1.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Deno ${{matrix.deno-version}}
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{matrix.deno-version}}
+      - run: cd deno && make
+        env:
+          CI: true
+  test-node:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: "https://registry.npmjs.org"
+      - run: cd nodejs && yarn test && yarn build
