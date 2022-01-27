@@ -5,7 +5,7 @@
   "description": "hyper connect ext for counter",
   "homepage": "https://github.com/hyper63/hyper-ext-counter",
   "repo": "https://github.com/hyper63/hyper-ext-counter",
-  "version": null,
+  "version": "0.0.6",
   "unstable": false,
   "unlisted": false,
   "files": [

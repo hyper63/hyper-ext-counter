@@ -1,6 +1,6 @@
 {
   "name": "hyper-ext-counter",
-  "version": null,
+  "version": "0.0.6",
   "type": "module",
   "license": "Apache 2.0",
   "source": "nodejs/src/index.ts",
