@@ -37,7 +37,18 @@ const exists = (c: Count): Count =>
 const set = (hyper: Hyper, key: string) =>
   (count: number) => hyper.cache.set(key, { count }).then(always(count));
 
-export const counter = (hyper: Hyper) =>
+export interface HyperExtCounter {
+  ext: {
+    counter: {
+      reset: (key: string) => Promise<number>;
+      get: (key: string) => Promise<number>;
+      inc: (key: string) => Promise<number>;
+      dec: (key: string) => Promise<number>;
+    };
+  };
+}
+
+export const counter = (hyper: Hyper): HyperExtCounter =>
   mergeDeepRight(hyper, {
     ext: {
       counter: {
