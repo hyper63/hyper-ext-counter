@@ -2,8 +2,9 @@
   "name": "hyper-ext-counter",
   "version": "0.0.7",
   "type": "module",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "source": "nodejs/src/index.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     "require": "./dist/counter.cjs",
     "default": "./dist/counter.modern.js"
