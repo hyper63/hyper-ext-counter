@@ -1,6 +1,16 @@
 import { R } from "./deps.ts";
 
-const { dec, inc, prop, mergeDeepRight, always } = R;
+const {
+  dec,
+  inc,
+  prop,
+  mergeDeepRight,
+  always,
+  compose,
+  is,
+  ifElse,
+  identity,
+} = R;
 
 interface Count {
   count: number;
@@ -17,6 +27,16 @@ interface Hyper {
   };
 }
 
+const exists = (c: Count): Count =>
+  ifElse(
+    (c: Count): boolean => compose(is(Number), prop("count"))(c),
+    (c: Count): Count => identity(c),
+    (c: Count): Count => always({ count: 0 } as Count)(c),
+  )(c);
+
+const set = (hyper: Hyper, key: string) =>
+  (count: number) => hyper.cache.set(key, { count }).then(always(count));
+
 export const counter = (hyper: Hyper) =>
   mergeDeepRight(hyper, {
     ext: {
@@ -24,22 +44,22 @@ export const counter = (hyper: Hyper) =>
         get: (key: string) =>
           hyper.cache
             .get(key)
+            .then(exists)
             .then(prop("count"))
             .catch(always(0)),
         inc: (key: string) =>
           hyper.cache
             .get(key)
+            .then(exists)
             .then(prop("count"))
             .catch(always(0))
             .then(inc)
-            .then((count) =>
-              hyper.cache.set(key, { count })
-                .then(() => count)
-            )
+            .then(set(hyper, key))
             .catch(always(0)),
         dec: (key: string) =>
           hyper.cache
             .get(key)
+            .then(exists)
             .then(prop("count"))
             .catch(always(0))
             .then(dec)
