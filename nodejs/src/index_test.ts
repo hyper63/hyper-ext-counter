@@ -33,4 +33,28 @@ test("counter reset", async () => {
   assert.equal(result, 0);
 });
 
+test("counter inc with no get", async () => {
+  const _hyper = {
+    cache: {
+      get: (_key) => Promise.resolve({ ok: false, status: 409 }),
+      set: (_key, _value) => Promise.resolve({ ok: true }),
+    },
+  };
+  const hyper = counter(_hyper);
+  const result = await hyper.ext.counter.inc("foo");
+  assert.equal(result, 1);
+});
+
+test("counter dec with no get", async () => {
+  const _hyper = {
+    cache: {
+      get: (_key) => Promise.resolve({ ok: false, status: 409 }),
+      set: (_key, _value) => Promise.resolve({ ok: true }),
+    },
+  };
+  const hyper = counter(_hyper);
+  const result = await hyper.ext.counter.dec("foo");
+  assert.equal(result, -1);
+});
+
 test.run();

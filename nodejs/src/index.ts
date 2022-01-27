@@ -20,6 +20,8 @@ interface Hyper {
 const set = (hyper, key) =>
   (count) => hyper.cache.set(key, assoc("count", count, {})).then(() => count);
 
+const exists = (result) => result?.ok === false ? ({ count: 0 }) : result;
+
 export const counter = (hyper: Hyper) =>
   mergeDeepRight(hyper, {
     ext: {
@@ -27,11 +29,13 @@ export const counter = (hyper: Hyper) =>
         get: (key: string) =>
           hyper.cache
             .get(key)
+            .then(exists)
             .then(prop("count"))
             .catch(always(0)),
         inc: (key: string) =>
           hyper.cache
             .get(key)
+            .then(exists)
             .then(prop("count"))
             .catch(always(0))
             .then(inc)
@@ -40,6 +44,7 @@ export const counter = (hyper: Hyper) =>
         dec: (key: string) =>
           hyper.cache
             .get(key)
+            .then(exists)
             .then(prop("count"))
             .catch(always(0))
             .then(dec)
