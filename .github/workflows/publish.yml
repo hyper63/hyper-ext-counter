@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - "hyper-ext-counter@*"
+      - "*"
 
 jobs:
   publish-nest:
