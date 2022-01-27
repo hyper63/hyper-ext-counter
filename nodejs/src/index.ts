@@ -17,12 +17,23 @@ interface Hyper {
   };
 }
 
+export interface HyperExtCounter {
+  ext: {
+    counter: {
+      reset: (key: string) => Promise<number>;
+      get: (key: string) => Promise<number>;
+      inc: (key: string) => Promise<number>;
+      dec: (key: string) => Promise<number>;
+    };
+  };
+}
+
 const set = (hyper, key) =>
   (count) => hyper.cache.set(key, assoc("count", count, {})).then(() => count);
 
 const exists = (result) => result?.ok === false ? ({ count: 0 }) : result;
 
-export const counter = (hyper: Hyper) =>
+export const counter = (hyper: Hyper): HyperExtCounter =>
   mergeDeepRight(hyper, {
     ext: {
       counter: {
