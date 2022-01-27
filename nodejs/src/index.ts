@@ -10,7 +10,7 @@ interface Result {
   ok: boolean;
 }
 
-interface Hyper {
+interface Cache {
   cache: {
     get: (key: string) => Promise<Count>;
     set: (key: string, v: Count) => Promise<Result>;
@@ -28,12 +28,13 @@ export interface HyperExtCounter {
   };
 }
 
-const set = (hyper, key) =>
-  (count) => hyper.cache.set(key, assoc("count", count, {})).then(() => count);
+const set = (hyper: Cache, key: string) =>
+  (count: number) =>
+    hyper.cache.set(key, assoc("count", count, {})).then(() => count);
 
 const exists = (result) => result?.ok === false ? ({ count: 0 }) : result;
 
-export const counter = (hyper: Hyper): HyperExtCounter =>
+export const counter = <H extends Cache>(hyper: H): H & HyperExtCounter =>
   mergeDeepRight(hyper, {
     ext: {
       counter: {
